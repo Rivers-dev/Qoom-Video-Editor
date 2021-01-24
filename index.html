@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamer</title>
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js"></script>
+
+    <script src='streamer.js'></script>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="content">
+        <h1 class="editor-title">Video editor online!</h1>
+        <input id="file-input" type="file" name="file" onchange="selectedVideo(this);">
+        <div class="wrapper">
+            <div class="video-container">
+                <video autoplay id="video" class='video-js vjs-default-skin vjs-big-play-centered' controls>
+                    <source id="source" type="video/mp4" src="Persona 5 - Opening Cinematic.mp4">
+                </video>
+            </div>
+        </div>
+        <div class="edit-menu">
+            <button class="select-button" type="button" id="start-trim-button">Start Trim</button>
+            <input id="start-trim-value" class="trim-gauge" type="number">
+            <button class="select-button" type="button" id="end-trim-button">End Trim</button>
+            <input id="end-trim-value" class="trim-gauge" type="number">
+        </div>
+    </div>
+</body>
+</html>
