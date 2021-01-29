@@ -14,7 +14,7 @@
 <body>
     <div class="content">
         <h1 class="editor-title">Video editor online!</h1>
-        <input id="file-input" type="file" name="file" onchange="selectedVideo(this);">
+        <input id="file-input" type="file" accept="video/*"/ name="file" onchange="displayVideo();">
         <div class="wrapper">
             <div class="video-container">
                 <video autoplay id="video" class='video-js vjs-default-skin vjs-big-play-centered' controls>
