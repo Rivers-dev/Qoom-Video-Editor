@@ -5,29 +5,36 @@ Trimming options:
 
 */
 
-const { createFFmpeg } = FFmpeg;
+const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
+var debug = true;
 
 (async () => {
   await ffmpeg.load();
 })();
 
-function selectedVideo(self)
+function displayVideo()
 {
-    var file = self.files[0];
+    let fileInput = document.getElementById("file-input");
+    let videoElement = document.getElementById("video_html5_api");
+    let file = fileInput.files[0];
+    let videoObject = URL.createObjectURL(file);
     var reader = new FileReader();
-    reader.onload = function(r)
+
+    videoElement.src = videoObject;
+    videoElement.load();
+    videoElement.play();
+
+    (async () => 
     {
-        let src = r.target.result;
-        let video = document.getElementById("video");
-        let source = document.getElementById("source");
+        let data = await fetchFile(file);
+        ffmpeg.run('-i', file, '-s', '1920x1080', 'output.mp4');
+        if (debug)
+        {
+            console.log(data);
+        }
 
-        source.setAttribute("src", src);
-        video.load();
-        video.play();
-    };
-
-    reader.readAsDataURL(file);
+    })();
 }
 
 function handleTime(v, p, s) //Function takes entered time, videoPlayer object, and a state (whether it's the start trim (true) or end trim (false))
