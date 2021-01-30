@@ -46,21 +46,7 @@ function displayVideo()
     videoElement.src = videoObject;
     videoElement.load();
     videoElement.play();
-
-    // (async () => 
-    // {
-    //     var data = await fetchFile(file);
-    //     ffmpeg.FS("writeFile", "example.mp4", data);
-    //     ffmpeg.run('-i', "example.mp4", '-s', '1920x1080', 'output.mp4');
-    //     if (debug)
-    //     {
-    //         console.log(data);
-    //     }
-
-    // })();
 }
-
-var previouslyTrimmed = false, previousInputFiletype, previousRequestedFiletype; //Variable that keeps track if the user has requested a trim in the same session; used to conserve memory
 
 function validateTrim(st, et, p) //Function takes entered time and videoPlayer object
 {
@@ -74,13 +60,14 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         let fileInput = document.getElementById("file-input");
         let file = fileInput.files[0];
         let data = await fetchFile(file);
-        let progressElement = document.getElementById("progress"), resultElement = document.getElementById("result");
-        await ffmpeg.FS("writeFile", "input.mp4", data);
+        let progressElement = document.getElementById("progress"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), selectedFiletype, inputFileType;
+        selectedFiletype = filetypeOptions.value, inputFileType = file.name.split(".").pop();
+        await ffmpeg.FS("writeFile", "input." + inputFileType, data);
         progressElement.innerHTML = "Converting...";
-        await ffmpeg.run("-i", "input.mp4", "-ss", st, "-to", et, "-async", "1", "output.mp4");
+        await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
 
         progressElement.innerHTML = "Done converting!";
-        let content = await ffmpeg.FS("readFile", "output.mp4"); //Returns a Uint8Array
+        let content = await ffmpeg.FS("readFile", "output." + selectedFiletype); //Returns a Uint8Array
         resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
         resultElement.style.visibility = "visible";
     })();
