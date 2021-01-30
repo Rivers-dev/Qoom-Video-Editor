@@ -74,15 +74,13 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         let fileInput = document.getElementById("file-input");
         let file = fileInput.files[0];
         let data = await fetchFile(file);
-        let progressElement = document.getElementById("progress"), downloadElement = document.getElementById("file-download-link"), resultElement = document.getElementById("result"), resultElementSource = document.getElementById("result-source");
+        let progressElement = document.getElementById("progress"), resultElement = document.getElementById("result");
         await ffmpeg.FS("writeFile", "input.mp4", data);
         progressElement.innerHTML = "Converting...";
         await ffmpeg.run("-i", "input.mp4", "-ss", st, "-to", et, "-async", "1", "output.mp4");
 
         progressElement.innerHTML = "Done converting!";
         let content = await ffmpeg.FS("readFile", "output.mp4"); //Returns a Uint8Array
-        downloadElement.href = URL.createObjectURL(new Blob([content], {type: "video/mp4"})); //Creates blob file with array
-        downloadElement.style.visibility = "visible";
         resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
         resultElement.style.visibility = "visible";
     })();
