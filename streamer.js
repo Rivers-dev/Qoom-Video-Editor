@@ -1,9 +1,3 @@
-/*
-Trimming options:
-    - Select clip
-        > Delete outer edges 
-*/
-
 const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
 var debug = true;
@@ -59,16 +53,30 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
     {
         let fileInput = document.getElementById("file-input");
         let file = fileInput.files[0];
+        if (file == undefined)
+        {
+            alert("Select a video from your system to begin editing!");
+            return;
+        }
         let data = await fetchFile(file);
         let progressElement = document.getElementById("progress"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), selectedFiletype, inputFileType;
         selectedFiletype = filetypeOptions.value, inputFileType = file.name.split(".").pop();
-        await ffmpeg.FS("writeFile", "input." + inputFileType, data);
-        progressElement.innerHTML = "Converting...";
-        await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
 
-        progressElement.innerHTML = "Done converting!";
-        let content = await ffmpeg.FS("readFile", "output." + selectedFiletype); //Returns a Uint8Array
-        resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
-        resultElement.style.visibility = "visible";
+        try
+        {
+            await ffmpeg.FS("writeFile", "input." + inputFileType, data);
+            progressElement.innerHTML = "Converting...";
+            await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
+    
+            progressElement.innerHTML = "Done converting!";
+            let content = await ffmpeg.FS("readFile", "output." + selectedFiletype); //Returns a Uint8Array
+            resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
+            resultElement.style.visibility = "visible";
+        }
+        catch(err)
+        {
+            progressElement.innerHTML = "Error converting!";
+        }
+       
     })();
 }
