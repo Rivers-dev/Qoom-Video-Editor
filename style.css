@@ -94,3 +94,18 @@ body
 {
     transition-duration:0.25s;
 }
+
+#file-download-link
+{
+    visibility: hidden;
+}
+
+#result 
+{
+    visibility: hidden;
+}
+
+#progress
+{
+    color: white;
+}

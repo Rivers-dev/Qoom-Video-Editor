@@ -14,7 +14,7 @@
 <body>
     <div class="content">
         <h1 class="editor-title">Video editor online!</h1>
-        <input id="file-input" type="file" name="file" onchange="selectedVideo(this);">
+        <input id="file-input" type="file" accept="video/*" name="file" onchange="displayVideo();">
         <div class="wrapper">
             <div class="video-container">
                 <video autoplay id="video" class='video-js vjs-default-skin vjs-big-play-centered' controls>
@@ -23,10 +23,22 @@
             </div>
         </div>
         <div class="edit-menu">
-            <button class="select-button" type="button" id="start-trim-button">Start Trim</button>
             <input id="start-trim-value" class="trim-gauge" type="number">
-            <button class="select-button" type="button" id="end-trim-button">End Trim</button>
             <input id="end-trim-value" class="trim-gauge" type="number">
+            <select name="filetype-select" id="filetype-select">
+                <option value="mp4">.mp4</option>
+                <option value="avi">.avi</option>
+                <option value="mov">.mov</option>
+                <option value="webm">.webm</option>
+            </select>
+            <button id="begin-trim" type="button">Trim!</button>
+            <label for="progress" id="progress">Ready to convert!</label>
+            <br>
+            <a id="file-download-link">Download here!</a>
+            <br>
+            <video id="result">
+                <source id="result-source">
+            </video>
         </div>
     </div>
 </body>
