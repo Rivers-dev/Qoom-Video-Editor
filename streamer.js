@@ -2,12 +2,35 @@
 Trimming options:
     - Select clip
         > Delete outer edges 
-
 */
 
 const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
 var debug = true;
+
+document.addEventListener("DOMContentLoaded", function() 
+{
+    if (debug)
+    {
+        console.log("DOM Content loaded.");
+    }
+
+    var videoPlayer = videojs("video", {
+        fluid: true
+    });
+
+    beginTrim = document.getElementById("begin-trim");
+    beginTrim.addEventListener("click", function()
+    {
+        if (debug)
+        {
+            console.log("Trim requested...");
+        }
+        let startTrimValue = document.getElementById("start-trim-value").value,
+        endTrimValue = document.getElementById("end-trim-value").value;
+        validateTrim(startTrimValue, endTrimValue, videoPlayer);
+    });
+});
 
 (async () => {
   await ffmpeg.load();
@@ -19,56 +42,48 @@ function displayVideo()
     let videoElement = document.getElementById("video_html5_api");
     let file = fileInput.files[0];
     let videoObject = URL.createObjectURL(file);
-    var reader = new FileReader();
 
     videoElement.src = videoObject;
     videoElement.load();
     videoElement.play();
 
-    (async () => 
-    {
-        let data = await fetchFile(file);
-        ffmpeg.run('-i', file, '-s', '1920x1080', 'output.mp4');
-        if (debug)
-        {
-            console.log(data);
-        }
+    // (async () => 
+    // {
+    //     var data = await fetchFile(file);
+    //     ffmpeg.FS("writeFile", "example.mp4", data);
+    //     ffmpeg.run('-i', "example.mp4", '-s', '1920x1080', 'output.mp4');
+    //     if (debug)
+    //     {
+    //         console.log(data);
+    //     }
 
+    // })();
+}
+
+var previouslyTrimmed = false, previousInputFiletype, previousRequestedFiletype; //Variable that keeps track if the user has requested a trim in the same session; used to conserve memory
+
+function validateTrim(st, et, p) //Function takes entered time and videoPlayer object
+{
+    if (debug)
+    {
+        console.log("Validating requested trim...");
+        console.log(st, et);
+    }
+    (async () =>
+    {
+        let fileInput = document.getElementById("file-input");
+        let file = fileInput.files[0];
+        let data = await fetchFile(file);
+        let progressElement = document.getElementById("progress"), downloadElement = document.getElementById("file-download-link"), resultElement = document.getElementById("result"), resultElementSource = document.getElementById("result-source");
+        await ffmpeg.FS("writeFile", "input.mp4", data);
+        progressElement.innerHTML = "Converting...";
+        await ffmpeg.run("-i", "input.mp4", "-ss", st, "-t", et, "-async", "1", "output.mp4");
+
+        progressElement.innerHTML = "Done converting!";
+        let content = await ffmpeg.FS("readFile", "output.mp4"); //Returns a Uint8Array
+        downloadElement.href = URL.createObjectURL(new Blob([content], {type: "video/mp4"})); //Creates blob file with array
+        downloadElement.style.visibility = "visible";
+        resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
+        resultElement.style.visibility = "visible";
     })();
 }
-
-function handleTime(v, p, s) //Function takes entered time, videoPlayer object, and a state (whether it's the start trim (true) or end trim (false))
-{
-    console.log("Handling time...");
-    if (!isNaN(v) && (v > 0) && (v < p.duration()))
-    {
-        //Time entered is a number bigger than zero and lower than the duration of the video (valid)
-        p.currentTime(v);
-        console.log("User entered trim: ", v);
-    }
-    else
-    {
-        //Time entered is either an invalid number or not entered at all, use current time instead
-        console.log("Defaulted to current time: ", p.currentTime());
-    }
-}
-
-document.addEventListener("DOMContentLoaded", function() 
-{
-    var videoPlayer = videojs("video", {
-        fluid: true
-    });
-
-    //Video editing menu
-    let startTrim = document.getElementById("start-trim-button"), 
-    startTrimValue = document.getElementById("start-trim-value"), 
-    endTrim = document.getElementById("end-trim-button"), 
-    endTrimValue = document.getElementById("end-trim-value");
-
-    startTrim.addEventListener("click", function() {
-        handleTime(startTrimValue.value, videoPlayer, true)
-    });
-    endTrim.addEventListener("click", function() {
-        handleTime(endTrimValue.value, videoPlayer, false);
-    });
-});
