@@ -58,6 +58,17 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
             alert("Select a video from your system to begin editing!");
             return;
         }
+        else if (isNaN(parseInt(st)) || isNaN(parseInt(et)))
+        {
+            alert("Please enter valid numbers to trim!");
+            return;
+        }
+        else if (parseInt(st) >= parseInt(et))
+        {
+            alert("Please ensure that the start breakpoint is earlier than the end breakpoint!");
+            return;
+        }
+
         let data = await fetchFile(file);
         let progressElement = document.getElementById("progress"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), selectedFiletype, inputFileType;
         selectedFiletype = filetypeOptions.value, inputFileType = file.name.split(".").pop();
