@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function()
 });
 
 (async () => {
-  await ffmpeg.load();
+  await ffmpeg.load(); //Wait for ffmpeg to load
 })();
 
 function displayVideo()
