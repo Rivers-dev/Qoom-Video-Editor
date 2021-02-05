@@ -4,6 +4,7 @@ var debug = true;
 
 document.addEventListener("DOMContentLoaded", function() 
 {
+    //Assign event listeners to the input boxes and trim button
     if (debug)
     {
         console.log("DOM Content loaded.");
