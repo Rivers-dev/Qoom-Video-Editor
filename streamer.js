@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function()
         fluid: true
     });
 
-    beginTrim = document.getElementById("begin-trim");
     let beginTrim = document.getElementById("begin-trim");
     beginTrim.addEventListener("click", function()
     {
@@ -22,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function()
             console.log("Trim requested...");
         }
         let startTrimValue = document.getElementById("start-trim-value").value,
-        endTrimValue = document.getElementById("end-trim-value").value;
     	endTrimValue = document.getElementById("end-trim-value").value;
         validateTrim(startTrimValue, endTrimValue, videoPlayer);
     });
@@ -73,7 +71,6 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
 
         let data = await fetchFile(file);
         let progressElement = document.getElementById("status"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), inputFileType = file.name.split(".").pop(), progressRatio = 0;
-        let selectedFiletype = filetypeOptions.value, loadingLabel = document.getElementById("progress-bar-label"), loadingBar = document.getElementById("bar");
         let selectedFiletype = filetypeOptions.value, loadingLabel = document.querySelector(".progress-bar-label"), loadingBar = document.getElementById("bar");
         try
         {
@@ -101,6 +98,5 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         }
     })();
 }
-
 
 window.displayVideo = displayVideo;
