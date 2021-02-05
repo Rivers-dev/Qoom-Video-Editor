@@ -2,33 +2,33 @@ const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
 var debug = true;
 
+let beginTrim = document.getElementById("begin-trim");
+beginTrim.addEventListener("click", function()
+{
+    if (debug)
+    {
+        console.log("Trim requested...");
+    }
+    let startTrimValue = document.getElementById("start-trim-value").value,
+    endTrimValue = document.getElementById("end-trim-value").value;
+    validateTrim(startTrimValue, endTrimValue, videoPlayer);
+});
+
+var videoPlayer = videojs("video", {
+    fluid: true
+});
+
+(async () => {
+    await ffmpeg.load();
+})();
+
 document.addEventListener("DOMContentLoaded", function() 
 {
     if (debug)
     {
         console.log("DOM Content loaded.");
     }
-
-    var videoPlayer = videojs("video", {
-        fluid: true
-    });
-
-    let beginTrim = document.getElementById("begin-trim");
-    beginTrim.addEventListener("click", function()
-    {
-        if (debug)
-        {
-            console.log("Trim requested...");
-        }
-        let startTrimValue = document.getElementById("start-trim-value").value,
-    	endTrimValue = document.getElementById("end-trim-value").value;
-        validateTrim(startTrimValue, endTrimValue, videoPlayer);
-    });
 });
-
-(async () => {
-  await ffmpeg.load();
-})();
 
 function displayVideo()
 {
