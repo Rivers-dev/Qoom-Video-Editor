@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function()
         fluid: true
     });
 
-    beginTrim = document.getElementById("begin-trim");
+    let beginTrim = document.getElementById("begin-trim");
     beginTrim.addEventListener("click", function()
     {
         if (debug)
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function()
             console.log("Trim requested...");
         }
         let startTrimValue = document.getElementById("start-trim-value").value,
-        endTrimValue = document.getElementById("end-trim-value").value;
+    	endTrimValue = document.getElementById("end-trim-value").value;
         validateTrim(startTrimValue, endTrimValue, videoPlayer);
     });
 });
@@ -70,13 +70,20 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         }
 
         let data = await fetchFile(file);
-        let progressElement = document.getElementById("progress"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), selectedFiletype, inputFileType;
-        selectedFiletype = filetypeOptions.value, inputFileType = file.name.split(".").pop();
-
+        let progressElement = document.getElementById("status"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), inputFileType = file.name.split(".").pop(), progressRatio = 0;
+        let selectedFiletype = filetypeOptions.value, loadingLabel = document.querySelector(".progress-bar-label"), loadingBar = document.getElementById("bar");
         try
         {
             await ffmpeg.FS("writeFile", "input." + inputFileType, data);
             progressElement.innerHTML = "Converting...";
+            loadingBar.style.visibility = "visible";
+            loadingLabel.style.visibility = "visible";
+            await ffmpeg.setProgress(({ratio}) => {
+                console.log(ratio);
+                progressRatio = ratio * 100;
+                console.log(progressRatio);
+                loadingBar.style.width = progressRatio + "%";
+            });
             await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
     
             progressElement.innerHTML = "Done converting!";
@@ -87,7 +94,9 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         catch(err)
         {
             progressElement.innerHTML = "Error converting!";
+            console.log(err);
         }
-       
     })();
 }
+
+window.displayVideo = displayVideo;
