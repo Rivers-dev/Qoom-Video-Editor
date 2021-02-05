@@ -1,6 +1,7 @@
 const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
 var debug = true;
+let myVar = 23;
 
 document.addEventListener("DOMContentLoaded", function() 
 {
