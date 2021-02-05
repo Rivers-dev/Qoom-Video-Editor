@@ -1,3 +1,5 @@
+/*  ###################################### GENERAL STYLING ###################################### */
+
 *{
     margin: 0;
     padding: 0;
@@ -22,6 +24,8 @@ body
     flex-shrink: 0;
 }
 
+/* ###################################### VIDEO DISPLAY ###################################### */
+
 .editor-title
 {
     text-align: center;
@@ -35,6 +39,61 @@ body
     height: 40vh;
     
 }
+
+.video-container
+{
+    flex: 1 0 auto;
+    position:relative;
+    margin: 0 auto;
+    width: 30vw;
+    height: 30vh;
+    text-align: center;
+}
+
+.video-container video
+{
+    box-shadow: 5px 5px red;
+}
+
+.video-container video:hover
+{
+    transition-duration:0.25s;
+    box-shadow: 8px 8px red;
+}
+
+.video-container video:out-of-range
+{
+    transition-duration:0.25s;
+}
+
+/* ###################################### PROGRESS BAR ###################################### */
+#progress-bar
+{
+    border-color: red;
+    background-color: transparent;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    height: 8vh;
+    width: 100%;
+}
+
+.progress-bar-label
+{
+    text-align: center;
+    color: red;
+    visibility: hidden;
+}
+
+#bar
+{
+    transition-duration: 0.2s;
+    width: 0%;
+    background-color: red;
+    height: 5vh;
+    visibility: hidden;
+}
+
+/* ###################################### EDIT MENU ###################################### */
 
 .edit-menu
 {
@@ -69,31 +128,12 @@ body
     color: black;
 }
 
-.video-container
+#status
 {
-    flex: 1 0 auto;
-    position:relative;
-    margin: 0 auto;
-    width: 30vw;
-    height: 30vh;
-    text-align: center;
+    color: white;
 }
 
-.video-container video
-{
-    box-shadow: 5px 5px red;
-}
-
-.video-container video:hover
-{
-    transition-duration:0.25s;
-    box-shadow: 8px 8px red;
-}
-
-.video-container video:out-of-range
-{
-    transition-duration:0.25s;
-}
+/* ###################################### RESULTING VIDEO ###################################### */
 
 #result 
 {
@@ -101,9 +141,4 @@ body
     width: 100%;
     height: 30vh;
     visibility: hidden;
-}
-
-#progress
-{
-    color: white;
 }
