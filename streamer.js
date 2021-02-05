@@ -1,9 +1,3 @@
-/*
-Trimming options:
-    - Select clip
-        > Delete outer edges 
-*/
-
 const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
 var debug = true;
@@ -46,21 +40,7 @@ function displayVideo()
     videoElement.src = videoObject;
     videoElement.load();
     videoElement.play();
-
-    // (async () => 
-    // {
-    //     var data = await fetchFile(file);
-    //     ffmpeg.FS("writeFile", "example.mp4", data);
-    //     ffmpeg.run('-i', "example.mp4", '-s', '1920x1080', 'output.mp4');
-    //     if (debug)
-    //     {
-    //         console.log(data);
-    //     }
-
-    // })();
 }
-
-var previouslyTrimmed = false, previousInputFiletype, previousRequestedFiletype; //Variable that keeps track if the user has requested a trim in the same session; used to conserve memory
 
 function validateTrim(st, et, p) //Function takes entered time and videoPlayer object
 {
@@ -73,17 +53,48 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
     {
         let fileInput = document.getElementById("file-input");
         let file = fileInput.files[0];
-        let data = await fetchFile(file);
-        let progressElement = document.getElementById("progress"), downloadElement = document.getElementById("file-download-link"), resultElement = document.getElementById("result"), resultElementSource = document.getElementById("result-source");
-        await ffmpeg.FS("writeFile", "input.mp4", data);
-        progressElement.innerHTML = "Converting...";
-        await ffmpeg.run("-i", "input.mp4", "-ss", st, "-t", et, "-async", "1", "output.mp4");
+        if (file == undefined)
+        {
+            alert("Select a video from your system to begin editing!");
+            return;
+        }
+        else if (isNaN(parseInt(st)) || isNaN(parseInt(et)))
+        {
+            alert("Please enter valid numbers to trim!");
+            return;
+        }
+        else if (parseInt(st) >= parseInt(et))
+        {
+            alert("Please ensure that the start breakpoint is earlier than the end breakpoint!");
+            return;
+        }
 
-        progressElement.innerHTML = "Done converting!";
-        let content = await ffmpeg.FS("readFile", "output.mp4"); //Returns a Uint8Array
-        downloadElement.href = URL.createObjectURL(new Blob([content], {type: "video/mp4"})); //Creates blob file with array
-        downloadElement.style.visibility = "visible";
-        resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
-        resultElement.style.visibility = "visible";
+        let data = await fetchFile(file);
+        let progressElement = document.getElementById("status"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), inputFileType = file.name.split(".").pop(), progressRatio = 0;
+        let selectedFiletype = filetypeOptions.value, loadingLabel = document.getElementById("progress-bar-label"), loadingBar = document.getElementById("bar");
+        try
+        {
+            await ffmpeg.FS("writeFile", "input." + inputFileType, data);
+            progressElement.innerHTML = "Converting...";
+            loadingBar.style.visibility = "visible";
+            loadingLabel.style.visibility = "visible";
+            await ffmpeg.setProgress(({ratio}) => {
+                console.log(ratio);
+                progressRatio = ratio * 100;
+                console.log(progressRatio);
+                loadingBar.style.width = progressRatio + "%";
+            });
+            await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
+    
+            progressElement.innerHTML = "Done converting!";
+            let content = await ffmpeg.FS("readFile", "output." + selectedFiletype); //Returns a Uint8Array
+            resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/mp4"}));
+            resultElement.style.visibility = "visible";
+        }
+        catch(err)
+        {
+            progressElement.innerHTML = "Error converting!";
+            console.log(err);
+        }
     })();
 }

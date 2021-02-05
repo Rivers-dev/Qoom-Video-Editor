@@ -18,9 +18,15 @@
         <div class="wrapper">
             <div class="video-container">
                 <video autoplay id="video" class='video-js vjs-default-skin vjs-big-play-centered' controls>
-                    <source id="source" type="video/mp4" src="Persona 5 - Opening Cinematic.mp4">
+                    <source id="source" type="video/mp4" src="qoom-default.mp4">
                 </video>
             </div>
+        </div>
+        <div class="progress-bar-label">
+            <label for="progress-bar">Progress:</label>
+        </div>
+        <div id="progress-bar">
+            <div id="bar"></div>
         </div>
         <div class="edit-menu">
             <input id="start-trim-value" class="trim-gauge" type="number">
@@ -32,11 +38,9 @@
                 <option value="webm">.webm</option>
             </select>
             <button id="begin-trim" type="button">Trim!</button>
-            <label for="progress" id="progress">Ready to convert!</label>
+            <label for="status" id="status">Ready to convert!</label>
             <br>
-            <a id="file-download-link">Download here!</a>
-            <br>
-            <video id="result">
+            <video id="result" class='video-js vjs-default-skin vjs-big-play-centered' controls>
                 <source id="result-source">
             </video>
         </div>
