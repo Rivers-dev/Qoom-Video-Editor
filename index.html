@@ -8,7 +8,7 @@
     <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js"></script>
 
-    <script src='streamer.js'></script>
+    <script src='streamer.js' type="module"></script>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -22,6 +22,12 @@
                 </video>
             </div>
         </div>
+        <div class="progress-bar-label">
+            <label for="progress-bar">Progress:</label>
+        </div>
+        <div id="progress-bar">
+            <div id="bar"></div>
+        </div>
         <div class="edit-menu">
             <input id="start-trim-value" class="trim-gauge" type="number">
             <input id="end-trim-value" class="trim-gauge" type="number">
@@ -32,7 +38,7 @@
                 <option value="webm">.webm</option>
             </select>
             <button id="begin-trim" type="button">Trim!</button>
-            <label for="progress" id="progress">Ready to convert!</label>
+            <label for="status" id="status">Ready to convert!</label>
             <br>
             <video id="result" class='video-js vjs-default-skin vjs-big-play-centered' controls>
                 <source id="result-source">
