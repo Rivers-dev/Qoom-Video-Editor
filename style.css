@@ -37,7 +37,6 @@ body
 {
     width: 100%;
     height: 40vh;
-    
 }
 
 .video-container
@@ -61,9 +60,14 @@ body
     box-shadow: 8px 8px red;
 }
 
-.video-container video:out-of-range
+#video_html5_api
 {
-    transition-duration:0.25s;
+    max-height: 30vh;
+}
+
+#video
+{
+    max-height: 30vh;
 }
 
 /* ###################################### PROGRESS BAR ###################################### */
