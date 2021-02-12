@@ -67,7 +67,8 @@ body
 
 #video
 {
-    max-height: 30vh;
+    position: static;
+    padding-top: 0;
 }
 
 /* ###################################### PROGRESS BAR ###################################### */
