@@ -62,6 +62,17 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
     {
         let fileInput = document.getElementById("file-input");
         let file = fileInput.files[0];
+        let radios = document.querySelectorAll(".trim-around-between-selector");
+        let selectedTrimType;
+
+        for (let i = 0; i < radios.length; i++)
+        {
+            if (radios[i].checked)
+            {
+                selectedTrimType = radios[i].value;
+                break;
+            }
+        }
         if (file == undefined) //User doesn't add a video before pressing trim
         {
             alert("Select a video from your system to begin editing!");
@@ -75,6 +86,11 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         else if (parseInt(st) >= parseInt(et)) //Prevents the user from making the end breakpoint earlier than the start breakpoint
         {
             alert("Please ensure that the start breakpoint is earlier than the end breakpoint!");
+            return;
+        }
+        else if (selectedTrimType == undefined) //User hasn't selected a trim type - alert the user
+        {
+            alert("Please select a trim type ('Trim around' or 'Trim between')!");
             return;
         }
 

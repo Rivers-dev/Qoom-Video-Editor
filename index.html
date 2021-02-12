@@ -29,6 +29,10 @@
             <div id="bar"></div>
         </div>
         <div class="edit-menu">
+            <input type="radio" class="trim-around-between-selector" name="selector" value="around" id="around">
+            <label for="around">Trim around</label>
+            <input type="radio" class="trim-around-between-selector" name="selector" value="between" id="between">
+            <label for="between">Trim between</label>
             <input id="start-trim-value" class="trim-gauge" type="number">
             <input id="end-trim-value" class="trim-gauge" type="number">
             <select name="filetype-select" id="filetype-select">
@@ -53,6 +57,13 @@
                 <p>
                     Upload a video of your choosing, then type in the boxes (from left to right) the timestamp (in seconds) of the desired portion 
                     and the ending timestamp, respectively. It's that simple!
+                    <br>
+                    <div id="trim-around-between-guide">
+                        <h4>Trim around vs trim between - what's the difference?</h4>
+                        <p>When "trim around" is selected, the editor will take the selected clip and discard the rest. When "trim between" is selected,
+                        the editor will delete the selected portion of the video and stitch together the two outer parts, if possible.
+                        </p>
+                    </div>
                 </p>
                 <h3>
                     Audio

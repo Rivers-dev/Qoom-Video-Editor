@@ -161,6 +161,11 @@ body
     margin: 3vh 3vw 1vh 3vw;
 }
 
+.usage-description-body h4
+{
+    margin: 3vh 3vw 1vh 3vw;
+}
+
 .usage-description-body p
 {
     margin: 0 3vw 0 3vw;
