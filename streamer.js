@@ -113,7 +113,20 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
             });
 
             //Runs the main conversion
-            await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
+            if (selectedTrimType == "around") //Trims around, discarding rest
+            {
+                await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
+            }
+            else
+            {
+                if (st == "0") //The selected start time is the start of the video, only cut away the last part
+                {
+                    let duration = await ffmpeg.run("-i", "input." + inputFileType, "2>&1", "|", "grep", "Duration", "|", "cut", "-d", " ", "-f", "4", "|", "sed", "s/,//");
+                    console.log(duration);
+                    await ffmpeg.run("-i", "input." + inputFileType, "-ss", et, "-to", et, "-async", "1", "output." + selectedFiletype);
+                }
+
+            }
     
             progressElement.innerHTML = "Done converting!";
             let content = await ffmpeg.FS("readFile", "output." + selectedFiletype); //Returns a Uint8Array; raw data output
