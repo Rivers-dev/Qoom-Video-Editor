@@ -91,9 +91,15 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
         let data = await fetchFile(file);
         let progressElement = document.getElementById("status"), resultElement = document.getElementById("result"), filetypeOptions = document.getElementById("filetype-select"), inputFileType = file.name.split(".").pop(), progressRatio = 0;
         let selectedFiletype = filetypeOptions.value, loadingLabel = document.querySelector(".progress-bar-label"), loadingBar = document.getElementById("bar");
+        let audioFile = document.getElementById("audio-input").files[0], customAudioCheck = document.getElementById("audio-check");
         try
         {
             await ffmpeg.FS("writeFile", "input." + inputFileType, data); //Write a temporary file with the contents of the user-inputted file
+            if (customAudioCheck.checked)
+            {
+                let audioFileType = audioFile.name.split(".").pop();
+                await ffmpeg.FS("writeFile", "audio." + audioFileType);
+            }
             progressElement.innerHTML = "Converting..."; //Update progress label
             loadingBar.style.visibility = "visible"; //Make loading bar visible
             loadingLabel.style.visibility = "visible";
@@ -108,9 +114,21 @@ function validateTrim(st, et, p) //Function takes entered time and videoPlayer o
 
             //Runs the main conversion
             await ffmpeg.run("-i", "input." + inputFileType, "-ss", st, "-to", et, "-async", "1", "output." + selectedFiletype);
+            if (customAudioCheck.checked)
+            {
+                await ffmpeg.run("-i", "output." + selectedFiletype, "-i", "audio." + audioFileType, "-c", "copy", "-map", "0:v:0", "-map", "1:a:0", "outputwithaudio." + selectedFiletype);
+            }
     
             progressElement.innerHTML = "Done converting!";
-            let content = await ffmpeg.FS("readFile", "output." + selectedFiletype); //Returns a Uint8Array; raw data output
+            let content;
+            if (customAudioCheck.checked)
+            {
+                content = await ffmpeg.FS("readFile", "outputwithaudio." + selectedFileType);
+            }
+            else
+            {
+                content = await ffmpeg.FS("readFile", "output." + selectedFiletype);
+            }
             resultElement.src = URL.createObjectURL(new Blob([content], {type: "video/" + selectedFiletype})); //Makes a new blob with the resulting file as the source of the video element
             resultElement.style.visibility = "visible"; //Makes the lower video element visible
         }
