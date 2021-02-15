@@ -18,7 +18,7 @@ var videoPlayer = videojs("video", { //Load VideoJS. It's not in use now, but I 
 });
 
 //Adding event listeners 
-let beginTrim = document.getElementById("begin-trim");
+let beginTrim = document.getElementById("begin-trim"), customAudioCheck = document.getElementById("audio-check"), audioFileInput = document.getElementById("audio-input");
 beginTrim.addEventListener("click", function()
 {
     if (debug)
@@ -27,6 +27,16 @@ beginTrim.addEventListener("click", function()
     }
     let startTrimValue = document.getElementById("start-trim-value").value, endTrimValue = document.getElementById("end-trim-value").value;
     validateTrim(startTrimValue, endTrimValue, videoPlayer);
+});
+customAudioCheck.addEventListener("change", function() {
+    if (this.checked)
+    {
+        audioFileInput.style.visibility = "visible";
+    }
+    else
+    {
+        audioFileInput.style.visibility = "hidden";
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function() 

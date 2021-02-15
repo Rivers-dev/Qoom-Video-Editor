@@ -138,6 +138,11 @@ body
     color: white;
 }
 
+#audio-input
+{
+    visibility: hidden;
+}
+
 /* ###################################### RESULTING VIDEO ###################################### */
 
 #result 
